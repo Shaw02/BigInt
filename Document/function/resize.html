@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang='ja'>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=Shift_JIS">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link rel="stylesheet" type="text/css" href="../BigInt.css">
+	<title>多倍長整数クラス　resize</title>
+</head>
+
+<!--────────────────────────────────────
+	ツールバー（レイヤー２）
+─────────────────────────────────────-->
+<div id='header'>
+
+<table>
+<tr><td><i>BigInt</i></td></tr>
+</table>
+<p><a href='../index.html'>BigInt Topページ</a></p>
+
+<h1>多倍長整数クラス for Microsoft Visual C++ (32bit)　メンバー関数</h1>
+<!--（↑このコンテンツの位置。）-->
+
+</div>
+<!--────────────────────────────────────
+	コンテンツ本体
+─────────────────────────────────────-->
+<div id='contents'>
+
+<h2>resize</h2>
+<div class='block'>
+
+<h3>定義</h3>
+<pre>
+	<var>void</var> BigInt::resize();<br>
+	<var>void</var> BigInt::resize(<var>unsigned int _sz</var>);
+</pre>
+
+<h3>引数</h3>
+<p></p>
+<table class='noline'>
+<tr><td><var>unsigned int _sz</var> … </td><td>設定する整数のバイト長</td></tr>
+</table>
+
+<h3>戻り値</h3>
+<p>
+	無し
+</p>
+
+<h3>内容</h3>
+<p>
+引数が無い場合は、現在の整数値を表現できる最小限のバイト長に設定します。<br>
+</p>
+<p>
+引数が記述する場合は、記述したバイト長に設定します。<br>
+このとき、設定したバイト長に整数が収まらない場合、上位バイトが切り捨てられます。<br>
+</p>
+<p>
+主に、低レベルの関数を呼び出す場合に、バイト長の設定（演算結果の格納用等）が必要となります。<br>
+※このバイト長は、実際に計算するサイズであり、整数のバイト長が長いほど、演算に時間が掛かります。<br>
+</p>
+
+<h3>注意</h3>
+<p>
+計算の処理量を少なくする為に、多くのメンバー関数により、この関数が呼び出されます。<br>
+そのため、バイト長を設定した場合においても、計算や、メンバー関数を呼び出した場合、バイト長が変化する事があります。<br>
+</p>
+<p>
+また、整数値のバイト長を現行より大きく取る場合、
+<a href="Get_Ptr.html">Get_Ptr()</a>関数で得られるポインタが変わる事があります。<br>
+</p>
+
+</div>
+
+
+</div>
+<!--────────────────────────────────────
+	フッター
+─────────────────────────────────────-->
+<div id='footer'>
+
+<table>
+<tr><td><i>BigInt</i><br></td></tr>
+</table>
+
+</div>
+
+<!--────────────────────────────────────-->
+</BODY>
+</html>

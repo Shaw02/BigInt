@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang='ja'>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=Shift_JIS">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link rel="stylesheet" type="text/css" href="../BigInt.css">
+	<title>多倍長整数クラス　BigInt（コンストラクタ、デストラクタ）</title>
+</head>
+
+<!--────────────────────────────────────
+	ツールバー（レイヤー２）
+─────────────────────────────────────-->
+<div id='header'>
+
+<table>
+<tr><td><i>BigInt</i></td></tr>
+</table>
+<p><a href='../index.html'>BigInt Topページ</a></p>
+
+<h1>多倍長整数クラス for Microsoft Visual C++ (32bit)　メンバー関数</h1>
+<!--（↑このコンテンツの位置。）-->
+
+</div>
+<!--────────────────────────────────────
+	コンテンツ本体
+─────────────────────────────────────-->
+<div id='contents'>
+
+<h2>BigInt（コンストラクタ、デストラクタ）</h2>
+<div class='block'>
+
+<h3>定義</h3>
+<h4>コンストラクタ</h4>
+<pre>
+	BigInt::BigInt(<var>void</var>);<br>
+	BigInt::BigInt(<var>BigInt&	_Src</var>);<br>
+	BigInt::BigInt(<var>int		_Src</var>);<br>
+	BigInt::BigInt(<var>char* _ptr</var>, <var>unsigned int _sz</var>);<br>
+</pre>
+<h4>デストラクタ</h4>
+<pre>
+	BigInt::~BigInt(<var>void</var>);
+</pre>
+
+<h3>引数</h3>
+<p></p>
+<table class='noline'>
+<tr><td><var>BigInt&	_Src	</var> … </td><td>設定する多倍長整数のオブジェクト</td></tr>
+<tr><td><var>int		_Src	</var> … </td><td>設定する整数値</td></tr>
+<tr><td><var>char* _ptr			</var> … </td><td>設定する整数値のあるポインタ</td></tr>
+<tr><td><var>unsigned int _sz	</var> … </td><td>設定する整数値のバイト長</td></tr>
+</table>
+
+<h3>戻り値</h3>
+<p>
+	無し
+</p>
+
+<h3>内容</h3>
+<p>
+引数を設定しない場合は、整数値は０となります。<br>
+引数を設定する事で、整数値を初期化できます。<br>
+</p>
+<ul>
+<li>BigInt型のクラスオブジェクトによる設定</li>
+<li>int型での設定</li>
+<li>メモリ中の整数をポインタとバイト長で設定するコンストラクタがあります。</li>
+</ul>
+
+</div>
+
+
+</div>
+<!--────────────────────────────────────
+	フッター
+─────────────────────────────────────-->
+<div id='footer'>
+
+<table>
+<tr><td><i>BigInt</i><br></td></tr>
+</table>
+
+</div>
+
+<!--────────────────────────────────────-->
+</BODY>
+</html>

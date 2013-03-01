@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BigInt", "BigInt\BigInt.vcproj", "{F06C9283-C09B-4248-A1E5-2C9D0F5952D7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcproj", "{B80715C1-24B9-4CFF-ADED-460DCF45433A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F06C9283-C09B-4248-A1E5-2C9D0F5952D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F06C9283-C09B-4248-A1E5-2C9D0F5952D7}.Debug|Win32.Build.0 = Debug|Win32
+		{F06C9283-C09B-4248-A1E5-2C9D0F5952D7}.Release|Win32.ActiveCfg = Release|Win32
+		{F06C9283-C09B-4248-A1E5-2C9D0F5952D7}.Release|Win32.Build.0 = Release|Win32
+		{B80715C1-24B9-4CFF-ADED-460DCF45433A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B80715C1-24B9-4CFF-ADED-460DCF45433A}.Debug|Win32.Build.0 = Debug|Win32
+		{B80715C1-24B9-4CFF-ADED-460DCF45433A}.Release|Win32.ActiveCfg = Release|Win32
+		{B80715C1-24B9-4CFF-ADED-460DCF45433A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

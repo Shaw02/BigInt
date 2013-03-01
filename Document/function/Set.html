@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang='ja'>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=Shift_JIS">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link rel="stylesheet" type="text/css" href="../BigInt.css">
+	<title>多倍長整数クラス　Set</title>
+</head>
+
+<!--────────────────────────────────────
+	ツールバー（レイヤー２）
+─────────────────────────────────────-->
+<div id='header'>
+
+<table>
+<tr><td><i>BigInt</i></td></tr>
+</table>
+<p><a href='../index.html'>BigInt Topページ</a></p>
+
+<h1>多倍長整数クラス for Microsoft Visual C++ (32bit)　メンバー関数</h1>
+<!--（↑このコンテンツの位置。）-->
+
+</div>
+<!--────────────────────────────────────
+	コンテンツ本体
+─────────────────────────────────────-->
+<div id='contents'>
+
+<h2>Set</h2>
+<div class='block'>
+
+<h3>定義</h3>
+<pre>
+	<var>BigInt&</var> BigInt::Set(<var>char* _ptr</var>, <var>unsigned int _sz</var>);
+</pre>
+
+<h3>引数</h3>
+<p></p>
+<table class='noline'>
+<tr><td><var>char*				</var> … </td><td>整数値のあるポインタ。</td></tr>
+<tr><td><var>unsigned int _sz	</var> … </td><td>整数値のバイト長</td></tr>
+</table>
+
+<h3>戻り値</h3>
+<p></p>
+<table class='noline'>
+<tr><td><var>BigInt&</var> … </td><td>このオブジェクトの参照</td></tr>
+</table>
+
+<h3>内容</h3>
+<p>
+整数値を設定します。<br>
+ポインターが示す場所は、整数値をリトルエンディアンで格納して下さい。<br>
+整数の最上位ビットは符号を示し、負数は２の補数としてください。<br>
+</p>
+<p>
+返り値には、このオブジェクトの参照を返すため、
+他のBigIntオブジェクトにも、同時に値を代入する事が可能です。<br>
+</p>
+<code><pre>
+
+	char c[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+
+	BigInt n3 = n2 = n1.Set(c, sizeof(c));
+
+</pre></code>
+
+</div>
+
+
+</div>
+<!--────────────────────────────────────
+	フッター
+─────────────────────────────────────-->
+<div id='footer'>
+
+<table>
+<tr><td><i>BigInt</i><br></td></tr>
+</table>
+
+</div>
+
+<!--────────────────────────────────────-->
+</BODY>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang='ja'>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=Shift_JIS">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link rel="stylesheet" type="text/css" href="BigInt.css">
+	<title>多倍長整数クラス for Microsoft Visual C++ (32bit)</title>
+</head>
+
+<!--────────────────────────────────────
+	ツールバー（レイヤー２）
+─────────────────────────────────────-->
+<div id='header'>
+
+<table>
+<tr><td><i>BigInt</i></td></tr>
+</table>
+
+<h1>多倍長整数クラス・ライブラリ for Microsoft Visual C++ (32bit)</h1>
+<!--（↑このコンテンツの位置。）-->
+
+</div>
+<!--────────────────────────────────────
+	コンテンツ本体
+─────────────────────────────────────-->
+<div id='contents'>
+
+<h2>概要</h2>
+<div class='block'>
+<p>
+多倍長整数を扱う為のＣ++用クラス・ライブラリです。<br>
+アーカイブ中には、Ｃ++言語及び、アセンブリ言語（Microsoft Macro Assembler）のソースが含まれます。<br>
+</p>
+<p>
+尚、アーカイブ中のプロジェクトファイルは、 "Microsoft Visual C++.net 2008 Express Edition" となっております。<br>
+アセンブリ言語ソースは、Visual C++付属のアセンブラー"ML.EXE"でアセンブル可能です。<br>
+</p>
+<p>
+※研究中のものです。今後、色々、Version Upするかもしれません。
+</p>
+</div>
+
+<!--─────────────────────────────-->
+<h2>特徴</h2>
+<div class='block'>
+<ol>
+<li>
+	オペレータ演算子をオーバーライド（定義）。<br>
+	ソースコード中で、char型やint型のように、演算子を記述できます。<br>
+</li>
+<li>
+	２の補数による負の数に符号に対応。<br>
+	（従って、いかなる場合も、符号付きとして処理します。）<br>
+	多倍長整数のバイナリをビッグエンディアンに並べ替えた場合に、
+	ASN.1(*1)の"INTEGER"をBER(*2)で符号化した時の値フィールドのバイナリと
+	同一構造になるため、セキュリティー関係のアプリケーションに組み込みやすい
+	と思います。<br>
+</li>
+<li>
+	基本的な関数は、アセンブリ言語（MASM）にて記述。<br>
+	ストリングス命令(movs, lods, stos等)を用いる事で、高速に計算処理します。<br>
+</li>
+<li>
+	シフト演算の高速化<br>
+	8回よりも大きい数でシフトする場合は、ビットシフトは0～7回だけとし、
+	その後、rep命令を伴ったmovs命令で高速メモリ転送で処理します。<br>
+</li>
+<li>
+	算術右シフト<br>
+	算術右シフトでは、最上位ビットを保つため（x86系のSAR命令と同等です）、符号を保ちます。<br>
+	また、専用の関数"BigInt_Shr()"関数を使用した場合、
+	シフトで溢れたビットを、32bitだけ、戻り値に返します
+	（x86系のSAR命令における、実行後のキャリーフラグみたいなものです）。<br>
+	1bitずつ左シフトしながら、最下位ビットをチェックするような
+	コードを記述する時に、便利です（実際、乗算・除算の処理に使用しています）。<br>
+</li>
+<li>
+	"Radix-16 Booth's multiplication（根=2<sup>4</sup>の改良型ブースの乗算）による乗算演算、<br>
+	"Restore divider（回復型除算）"による除算・剰余演算に対応。<br>
+	これらのアルゴリズムはシフト演算と加減算で処理可能であり、16bit/32bit毎の筆算よりは高速に計算します。<br>
+	※FFT乗算には未対応です（研究中）。<br>
+</li>
+</ol>
+<dl>
+<dt>(*1) ASN.1</dt><dd>抽象構文記法1（Abstract Syntax Notation One）<br>
+		　…　（参考 ： ITU-T Rec. X.680 ＆ ISO/IEC 8824-1 ＆ JIS X 5603:1990）</dd>
+<dt>(*2) BER</dt><dd>基本符号化規則（Basic Encoding Rule）<br>
+		　…　（参考 ： ITU-T Rec. X.690 ＆ ISO/IEC 8825-1 ＆ JIS X 5604:1990）</dd>
+</dl>
+
+</div>
+
+<!--─────────────────────────────-->
+<h2>クラス"BigInt"の使い方</h2>
+
+<div class='block'>
+
+<h3>設定</h3>
+<h4>Ｃ／Ｃ＋＋ソース側の設定</h4>
+<p>
+`BigInt.h'をインクルード宣言して下さい。<br>
+</p>
+
+<h4>Visual C++（IDE）の設定</h4>
+<p>
+リンカーで、入力するライブラリに、本ライブラリ`BigInt.lib'を追加して下さい。
+</p>
+<p>
+構成を`Release'にし、ランタイムライブラリは『マルチスレッド(/MT)』に設定して下さい。<br>
+異なる構成とする場合（例えば、`Debug'等）は、使用する構成に合わせてライブラリをビルドし直して下さい。<br>
+（もしくは、`BigInt'フォルダー中のライブラリのソースを、そのままプロジェクトにインポートしてご利用ください。）
+</p>
+<img src="img/vc.jpg">
+
+<h3>型（クラス名）</h3>
+<p>
+<var>BigInt</var>となります。<br>
+char型や、int型の様に、扱う事が可能です。<br>
+</p>
+<code><pre>
+
+#include "BigInt.h"
+
+	BigInt	n1 = 1000;		//※左辺を数値にする場合は、符号付き32bitで示せる範囲まで。
+
+</pre></code>
+
+<h4>補足</h4>
+<p>
+整数値の実体（バイト列）は、ヒープ領域に格納され、クラスのメンバーには含まれません。<br>
+BigInt型は、メンバー変数として、その整数の実体（バイト列）のポインタを保有しています。<br>
+そのため、ローカル変数として定義した場合でも、スタックフレームは圧迫しません。<br>
+従って、必ずしもBigIntのクラスオブジェクトをnew演算子で生成する必要性は無く、必要に応じて使い分けてください。<br>
+（new演算子でクラスオブジェクトを生成する方が、処理速度は遅くなると思います。）
+</p>
+
+<h3>対応演算子</h3>
+<p>
+オペレータ演算子をオーバーライドしていることより、演算子が利用可能です。<br>
+</p>
+<table>
+<caption>対応演算子</caption>
+<tr><th>演算子	</th><th>機能			</th><th>詳細</th></tr>
+<tr><td> =		</td><td>代入			</td><td>左辺の変数に、右辺の値、若しくは式の結果を代入します。</td></tr>
+<tr><td> +=		</td><td>加算			</td><td>左辺と右辺を加算した値を左辺に代入します。</td></tr>
+<tr><td> -=		</td><td>減算			</td><td>左辺を右辺で減算した値を左辺に代入します。</td></tr>
+<tr><td> *=		</td><td>乗算			</td><td>左辺と右辺を乗算した積を左辺に代入します。</td></tr>
+<tr><td> /=		</td><td>除算			</td><td>左辺を右辺で除算した商を左辺に代入します。</td></tr>
+<tr><td> %=		</td><td>剰余			</td><td>左辺を右辺で除算した剰余を左辺に代入します。</td></tr>
+<tr><td> |=		</td><td>論理和			</td><td>左辺と右辺の論理和(OR)をを左辺に代入します。</td></tr>
+<tr><td> &=		</td><td>論理積			</td><td>左辺と右辺の論理積(AND)をを左辺に代入します。</td></tr>
+<tr><td> ^=		</td><td>排他的論理和	</td><td>左辺と右辺の排他的論理和(XOR)をを左辺に代入します。</td></tr>
+<tr><td> <<=	</td><td>算術左シフト	</td><td>右辺を左辺(<var>unsigned int</var>型のみ対応)で指定した回数、算術左シフトした値を左辺に代入します。</td></tr>
+<tr><td> >>=	</td><td>算術右シフト	</td><td>右辺を左辺(<var>unsigned int</var>型のみ対応)で指定した回数、算術右シフトした値を左辺に代入します。</td></tr>
+<tr><td> ++		</td><td>インクリメント	</td><td>値を＋１します。前置き、後置き共に対応。</td></tr>
+<tr><td> --		</td><td>デクリメント	</td><td>値を－１します。前置き、後置き共に対応。</td></tr>
+<tr><td> +		</td><td>加算			</td><td>左辺と右辺を加算した値を求めます。</td></tr>
+<tr><td> -		</td><td>減算			</td><td>左辺を右辺で減算した値を求めます。（左辺がある場合）</td></tr>
+<tr><td> *		</td><td>乗算			</td><td>左辺と右辺を乗算した積を求めます。</td></tr>
+<tr><td> /		</td><td>除算			</td><td>左辺を右辺で除算した商を求めます。</td></tr>
+<tr><td> %		</td><td>剰余			</td><td>左辺を右辺で除算した剰余を求めます。</td></tr>
+<tr><td> |		</td><td>論理和			</td><td>左辺と右辺の論理和(OR)を求めます。</td></tr>
+<tr><td> &		</td><td>論理積			</td><td>左辺と右辺の論理積(AND)を求めます。</td></tr>
+<tr><td> ^		</td><td>排他的論理和	</td><td>左辺と右辺の排他的論理和(XOR)を求めます。</td></tr>
+<tr><td> ~		</td><td>反転			</td><td>右辺の１の補数（ビット反転(NOT)した値）を求めます。</td></tr>
+<tr><td> -		</td><td>マイナス		</td><td>右辺の２の補数（符合反転(NEG)した値）を求めます。（左辺が無い場合）</td></tr>
+<tr><td> <<		</td><td>算術左シフト	</td><td>右辺を左辺(<var>unsigned int</var>型のみ対応)で指定した回数、算術左シフトした値を求めます。</td></tr>
+<tr><td> >>		</td><td>算術右シフト	</td><td>右辺を左辺(<var>unsigned int</var>型のみ対応)で指定した回数、算術右シフトした値を求めます。</td></tr>
+<tr><td> ==		</td><td>等しい			</td><td>左辺と右辺が等しい時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+<tr><td> !=		</td><td>等しくない		</td><td>左辺と右辺が等しくない時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+<tr><td> >		</td><td>大なり			</td><td>左辺が右辺を超過する時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+<tr><td> >=		</td><td>大なりイコール	</td><td>左辺が右辺以上の時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+<tr><td> <		</td><td>小なり			</td><td>左辺が右辺未満の時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+<tr><td> <=		</td><td>小なりイコール	</td><td>左辺が右辺以下の時に<var>true</var>、それ以外の時に<var>false</var>を返します。</td></tr>
+</table>
+
+<p>
+<strong>注意</strong><br>
+代入演算子及び単項演算子において、右辺にBigInt型を含む場合は、左辺はBigInt型である必要があります。<br>
+</p>
+
+<h4>補足</h4>
+<p>
+演算子!, &&, ||については定義していませんが、
+比較演算子は<var>bool</var>型を返すため、左辺、右辺共に比較演算子もしくは<var>bool</var>型であれば、使用可能です。<br>
+（左辺、右辺がBigIntである場合が、未定義です。）<br>
+</p>
+<p>
+基本的に、二項演算子（代入を含まない演算子）は、単項演算子（代入を含む演算子）よりも遅くなります。<br>
+コンパイル後の機械語レベルでは、二項演算子は計算結果のオブジェクトを生成し、
+その後、変数に代入した後にその生成したオブジェクトを開放するコードとなるためです。<br>
+</p>
+<p>
+また、インクリメント／デクリメントにおける後置き（n++;）は、前置き（++n;）よりも遅くなります。<br>
+コンパイル後の機械語レベルでは、新たに多倍長整数オブジェクトを生成し、
+＋１、もしくは－１の演算をする前の整数値を代入し、戻り値としてその値を返すためです。<br>
+</p>
+<p>
+従って、処理速度の最適化のためには、できる範囲で、(1) 単項演算子で計算式を記述する、(2) 前置き（++n;）を使用すると、処理が早くなる場合があります。<br>
+</p>
+
+
+<h3>メンバー関数</h3>
+<p>
+クラス<var>BigInt</var>のメンバー関数です。<br>
+（オペレータ演算子は除きます。）<br>
+</p>
+<table>
+<tr><th>戻り値の型		</th><th>関数名				</th><th>機能									</th></tr>
+<tr><td>─				</td><td><a href="function/BigInt.html">BigInt();<br>BigInt(BigInt&	_Src);<br>BigInt(int _Src);<br>BigInt(char* _ptr, unsigned int _sz);<br>~BigInt();</a></td><td>コンストラクタ／デストラクタ<br>引数を設定する事で、値を代入可能です。</td></tr>
+<tr><td>BigInt&			</td><td><a href="function/Set.html">Set(char* _ptr, unsigned int _sz);		</a></td><td>任意長で整数値を設定します。</td></tr>
+<tr><td>BigInt			</td><td><a href="function/Power.html">Power(BigInt&	_Src);		</a></td><td>_Src乗を求めます。</td></tr>
+<tr><td>BigInt			</td><td><a href="function/Power.html">Power(int	_Src);			</a></td><td>_Src乗を求めます。</td></tr>
+<tr><td>void			</td><td><a href="function/resize.html">resize();<br>resize(unsigned int _sz)</a></td><td>整数のバイト長を設定します。</td></tr>
+<tr><td>char*			</td><td><a href="function/Get_Ptr.html">Get_Ptr();							</a></td><td>整数のポインタ返します。	</td></tr>
+<tr><td>unsigned int	</td><td><a href="function/Get_Byte_Length.html">Get_Byte_Length();			</a></td><td>整数のバイト長を返します。	</td></tr>
+<tr><td>unsigned int	</td><td><a href="function/Get_Bit_Length.html">Get_Bit_Length();			</a></td><td>整数のビット長を返します。	</td></tr>
+<tr><td>char			</td><td><a href="function/Get_Sign.html">Get_Sign();						</a></td><td>符号を返します。			</td></tr>
+<tr><td>void			</td><td><a href="function/Get_Ascii_Dec.html">Get_Ascii_Dec(string* _asc);	</a></td><td>整数を10進数のAscii文字列で返します。</td></tr>
+</table>
+
+<h3>低レベル関数</h3>
+<p>
+オーバーライドされたオペレータ演算子の処理ルーチンから呼ばれる低レベルのグローバル関数です。<br>
+癖がある関数なので、通常は演算子を用いてください。<br>
+主に、アセンブリ言語で記述されています。<br>
+</p>
+
+<table>
+<tr><th>戻り値の型		</th><th>関数名											</th><th>機能				</th></tr>
+<tr><td>void			</td><td>BigInt_Copy(BigInt* _dst,	BigInt* _src);		</td><td>転送				</td></tr>
+<tr><td>void			</td><td>BigInt_Add(BigInt* _dst,	BigInt* _src);		</td><td>加算				</td></tr>
+<tr><td>void			</td><td>BigInt_Sub(BigInt* _dst,	BigInt* _src);		</td><td>減算				</td></tr>
+<tr><td>void			</td><td>BigInt_Not(BigInt* _dst,	BigInt* _src);		</td><td>ビット反転			</td></tr>
+<tr><td>void			</td><td>BigInt_And(BigInt* _dst,	BigInt* _src);		</td><td>論理積				</td></tr>
+<tr><td>void			</td><td>BigInt_Or(	BigInt* _dst,	BigInt* _src);		</td><td>論理和				</td></tr>
+<tr><td>void			</td><td>BigInt_Xor(BigInt* _dst,	BigInt* _src);		</td><td>排他的論理和		</td></tr>
+<tr><td>void			</td><td>BigInt_Shl(BigInt* _src,	unsigned int _Cnt);	</td><td>算術左シフト		</td></tr>
+<tr><td>void			</td><td>BigInt_Shl1(BigInt* _src);						</td><td>1bit算術左シフト	</td></tr>
+<tr><td>unsigned int	</td><td>BigInt_Shr(BigInt* _src,	unsigned int _Cnt);	</td><td>算術右シフト		<br>※戻り値に、32bit分の桁あふれを返します。</td></tr>
+<tr><td>unsigned int	</td><td>BigInt_Shr1(BigInt* _src);						</td><td>1bit算術右シフト	<br>※戻り値の最上位ビットに、桁あふれを返します。</td></tr>
+<tr><td>void			</td><td>BigInt_Mul(BigInt* _Dst, BigInt _Src1, BigInt _Src2);					</td><td>乗算（Radix-16 Booth's multiplication）</td></tr>
+<tr><td>void			</td><td>BigInt_Mul(BigInt* _Dst, BigInt _Src1, int _Src2);						</td><td>乗算（Radix-16 Booth's multiplication）</td></tr>
+<tr><td>bool			</td><td>BigInt_Div(BigInt* _Result, BigInt* _Mod, BigInt _Dst, BigInt _Src);	</td><td>除算（回復法）<br><strong>※商と余を同時に求めます。</strong><br>０で除算した場合は、<var>flase</var>を返すか、０除算割り込み（例外）を発生させます。</td></tr>
+</table>
+
+</div>
+
+
+<!--─────────────────────────────-->
+<h2>クラス"montgomery"の使い方</h2>
+
+<div class='block'>
+<h3>モンゴメリ法とは</h3>
+<p>
+Ｎ＞０を法とした合同算術を高速に行う計算アルゴリズムです。<br>
+例えば暗号理論で重要な計算式である塁余剰演算、
+超巨大整数Ｎを法として、超巨大整数Ｐの超巨大整数ｅの塁余剰を求める時などに効果を発揮します。<br>
+</p>
+<p>
+予め、Set_Modulo(<var>BigInt* N</var>)関数にて法をＮに設定する時に、処理速度が必要な除算をこの段階で行ってしまいます。<br>
+実際のＮを法とした合同演算を行う時は除算を用いないため、
+Ｎを法とした合同演算を複数回行う場合に計算速度の高速化が見込めます。<br>
+</p>
+
+<h3>設定</h3>
+<h4>Ｃ／Ｃ＋＋ソース側の設定</h4>
+<p>
+`BigInt.h'及び`montgomery.h'をインクルード宣言して下さい。<br>
+</p>
+<h4>リンカーの設定</h4>
+<p>
+`BigInt.lib'をリンクして下さい。
+</p>
+
+<h3>型（クラス名）</h3>
+<p>
+<var>montgomery</var>となります。<br>
+</p>
+<code><pre>
+
+#include "BigInt\montgomery.h"
+
+</pre></code>
+
+<h3>メンバー関数</h3>
+<p>
+クラス<var>BigInt</var>のメンバー関数です。<br>
+（オペレータ演算子は除きます。）<br>
+</p>
+<table>
+<tr><th>戻り値の型		</th><th>関数名													</th><th>機能									</th></tr>
+<tr><td>─				</td><td>montgomery();<br>~montgomery();														</td><td>コンストラクタ／デストラクタ</td></tr>
+<tr><td>void			</td><td>Set_Modulo(<var>BigInt* N</var>);														</td><td>法（module）を<var>N</var>に設定します。</td></tr>
+<tr><td>void			</td><td>MR(<var>BigInt* result</var>, <var>BigInt T</var>);									</td><td><var>T</var>をモンゴメリ･リダクションして、<var>result</var>に返します。</td></tr>
+<tr><td>void			</td><td>Mul(<var>BigInt* dst</var>, <var>BigInt& src1</var>, <var>BigInt& src2</var>);			</td><td>モンゴメリ乗算を用いて、以下の計算式を実行します。<br><var>dst</var> ＝ （<var>src1</var> × <var>src2</var>） Mod <var>N</var></td></tr>
+<tr><td>void			</td><td>Power(<var>BigInt* _Result</var>, <var>BigInt& _Src1</var>, <var>BigInt& _Src2</var>);	</td><td>モンゴメリ乗算を用いて、以下の計算式を実行します。<br><var>resilt</var> ＝ <var>src1</var><sup>（<var>src2</var>）</sup> Mod <var>N</var></td></tr>
+</table>
+
+
+</div>
+
+
+<!--─────────────────────────────-->
+<h2>仕様</h2>
+
+<div class='block'>
+
+<h3>多倍長整数の実体</h3>
+<p>
+BigIntクラスのオブジェクトは、整数の実体のバイト列があるポインターとそのサイズを有し、整数の実体はメンバーに持ちません。<br>
+クラスオブジェクトを生成する時に、コンストラクタにてＣ++言語のnew演算子によりヒープメモリを確保し、整数の実体が格納されます。<br>
+また、BigIntクラスのオブジェクトを解放する時に、デストラクターでdelete演算子により開放します。<br>
+</p>
+<p>
+計算の結果において、元のサイズよりバイト長が大きくなる場合は、新たにヒープメモリを確保し直し、格納されます。<br>
+元より小さくなる場合は、ヒープメモリの確保し直しは実施しません（new, delete演算子による処理速度低下を防止するため）。<br>
+ただし、別途に整数の実際のバイト長をメンバー変数に持っており、余分な桁の演算は省略する構造になっています。<br>
+</p>
+
+<h3>多倍長整数の構造</h3>
+<p>
+整数のバイト列は、リトルエンディアンで格納されます。<br>
+負数は２の補数で表現され、最上位ビットが符号を示します。<br>
+例を、以下に示します。
+</p>
+<table>
+<tr><th>10進数値</th><th>バイト列		</th></tr>
+<tr><td> 1		</td><td>0x01			</td></tr>
+<tr><td> 127	</td><td>0x7F			</td></tr>
+<tr><td> 128	</td><td>0x80 0x00		</td></tr>
+<tr><td> 255	</td><td>0xFF 0x00		</td></tr>
+<tr><td> 32768	</td><td>0x00 0x80 0x00	</td></tr>
+<tr><td> -1		</td><td>0xFF			</td></tr>
+<tr><td> -127	</td><td>0x81			</td></tr>
+<tr><td> -128	</td><td>0x80			</td></tr>
+<tr><td> -129	</td><td>0x7F 0xFF		</td></tr>
+<tr><td> -255	</td><td>0x01 0xFF		</td></tr>
+<tr><td> -32768	</td><td>0x00 0x80		</td></tr>
+</table>
+
+</div>
+
+<!--─────────────────────────────-->
+<h2>著作権</h2>
+
+<div class='block'>
+<p>
+	Ｓ．Ｗ．<br>
+	<br>
+	メール　：<img src='img/mail.jpg'><br>
+	ＵＲＬ　：<a href='http://homepage1.nifty.com/~sha_w/'>S.W. Homepage</a><br>
+	ｍｉｘｉ：<a href='http://mixi.jp/show_profile.pl?id=16558'>id=16558</a><br>
+
+	<br>
+	誤植、改善案等ありましたら、お気兼ねなく連絡頂けると幸いです。<br>
+</p>
+</div>
+
+
+</div>
+<!--────────────────────────────────────
+	フッター
+─────────────────────────────────────-->
+<div id='footer'>
+
+<table>
+<tr><td><i>BigInt</i><br></td></tr>
+</table>
+
+</div>
+
+<!--────────────────────────────────────-->
+</BODY>
+</html>
